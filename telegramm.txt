@@ -1,0 +1,46 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+
+public class SecondMain {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(reader.readLine());
+        int[] diegoCards = Arrays.stream(reader.readLine().split(" ")).distinct().mapToInt(Integer::parseInt).sorted().toArray();
+
+        int K = Integer.parseInt(reader.readLine());
+        int max = diegoCards.length;
+        int l, r, m;
+
+        int[] friends = Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        for (int friend : friends) {
+            l = 0;
+            r = max;
+
+            while (l < r) {
+                m = (l + r + 1) / 2;
+
+                if (m < max && diegoCards[m] < friend) {
+                    l = m;
+                } else {
+                    r = m - 1;
+                }
+            }
+
+            if (diegoCards[l] < friend) {
+                System.out.println(l + 1);
+            } else {
+                System.out.println(0);
+            }
+
+
+        }
+
+        reader.close();
+
+    }
+
+}
