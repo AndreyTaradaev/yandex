@@ -22,6 +22,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 	//	"sort"
 )
 
@@ -38,6 +39,7 @@ func dfs (graf [][]int,visited  [] int,  v,group  int )  {
 
 func main() {
 	//var command string
+	start := time.Now()
 	var N, M int // вершины  ребра
 	file, err := os.Open("input.txt")
 	if err != nil {
@@ -69,11 +71,11 @@ func main() {
 		}
 	}
  //fmt.Println( ns)
- vis := make([] int, N+1,N+1) 	
+ vis := make(  []int, N+1,N+1) 	
  for i := 1; i <len(vis) ; i++ {
 	vis[i] =-1
  }
-comp := 0
+comp := 1
 for i := 1; i < len(ns); i++ {
 	if vis[i]==-1 {
 		dfs(ns,vis,i,comp)
@@ -84,21 +86,46 @@ for i := 1; i < len(ns); i++ {
 /* fmt.Println( ns)
 fmt.Println(vis)
  */
- var ret string
-fmt.Println(comp)
-for i := 0; i < comp; i++ {
+
+  m := make(map[int]  []int )
+ for i := 1; i < comp; i++ {
+	m[i] = make([]int, 0,2 )	
+ }
+
+ for i := 1; i < len(vis); i++ {
+	m[vis[i]] = append(m[vis[i]], i )		
+ }
+ finish :=  time.Now().Sub(start)
+ 
+
+fmt.Println(comp-1)
+for i := 1; i < comp; i++ {
+	l:= m[i] 
+	fmt.Println(len(l))
+	for _, v := range l {
+		fmt.Print(v," ")
+	}
+	fmt.Println()
+}
+
+//fmt.Println(m)
+/*  var ret string 
+ for i := 1; i < comp; i++ {
 	var ff string
 	var count int =0
-	for j:=1; j<len(vis);j++ {
+	for j:=i; j<len(vis);j++ {
 		if (vis[j]==i){
 		count++
 		ff += fmt.Sprint(j," ")	
 		}		
 	}
 	ret += fmt.Sprint(count,"\n",ff,"\n")
-}
-fmt.Println(ret)
-/* dfs(ns,vis,1)
+}  */
+
+//fmt.Println(ret)
+fmt.Println("finish",finish)
+fmt.Println("finish print",time.Now().Sub(start))
+ /* dfs(ns,vis,1)
 
  var ff string
  count:=0
