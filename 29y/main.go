@@ -36,12 +36,27 @@ import (
 	//	"sort"
 )
 
+const inf int = 1000000
+
 func min(x, y int) int {
 
 	if x > y {
 		return y
 	}
 	return x
+}
+
+func findmin(sl []int) (int, int) {
+	if len(sl) == 0 {
+		return -1, -1
+	}
+	var ind, val int = 0, sl[0]
+	for i := 1; i < len(sl); i++ {
+		if sl[i] <= val {
+			val, ind = sl[i], i
+		}
+	}
+	return ind, val
 }
 
 func main() {
@@ -59,7 +74,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	a := make([]int, N+1, N+1)
+	a := make([]int, N+1, N+1) // массив цен на обеды по дням отсчет от 1 индекса(первый день)
 
 	for i := 1; i < N+1; i++ {
 		var g int
@@ -69,31 +84,73 @@ func main() {
 			return
 		}
 		a[i] = g
-	}
-	dp := make([][]int, N+1, N+1)
+	} // заполняем цены обедов
+
+	// двумерный массив по строкам будут купоны по столбцам дни проходить надо по дням
+
+	dp := make([][]int, N+1, N+1) //дни
 	for i := 0; i < len(dp); i++ {
-		dp[i] = make([]int, N+1, N+1)
+		dp[i] = make([]int, N+2, N+2) //купоны
 	}
+	// массив  дней когда использовались купоны
 
-	for i := 1; i < N+1; i++ {
-	dp[0][i] = 10000		
-	}
-
-	
-	for i := 1; i < N+1; i++ {
-		for j := 1; j < N; j++ {
-
-			if a[i] <= 100 {
-				dp[i][j] = min(dp[i-1][j]+a[i], dp[i-1][j+1])
-			} else {
-				dp[i][j] = min(dp[i-1][j-1]+a[i], dp[i-1][j+1])
+	for i := 0; i < len(dp); i++ {
+		for j := 0; j < len(dp[i]); j++ {
+			if j > i {
+				dp[i][j] = inf
+				continue
 			}
-		}
+			if j == 0 {
+				if i == 0 {
+					continue
+				}
+				if a[i] <= 100 {
+					dp[i][j] = min(dp[i-1][j]+a[i], dp[i-1][j+1])
+				} else {
+					//если есть купон 	можем  использовать его
+					if dp[i-1][j+1] != inf {
+						dp[i][j] = min(dp[i-1][j]+a[i], dp[i-1][j+1])
+					} else {
+						dp[i][j] = inf
+					}
+				}
+				continue
+			} else {
+				if a[i] <= 100 {
+					dp[i][j] = min(dp[i-1][j]+a[i], dp[i-1][j+1])
+				} else {
+					dp[i][j] = min(dp[i-1][j-1]+a[i], dp[i-1][j+1])
+				}
+			}
 
+		}
 	}
 
-	fmt.Println(a)
+	/*  fmt.Println(a)
 	for _, v := range dp {
 		fmt.Println(v)
-	}	
+	}  */
+	ind, val := findmin(dp[len(dp)-1])
+	fmt.Println(val)
+	fmt.Print(ind, " ")
+
+	sl := make([]int, 0, 0)
+
+	for i := len(dp) - 1; i > 0; i-- {
+		if val == dp[i-1][ind]+a[i] {
+			val = dp[i-1][ind]
+		} else if ind > 0 && val == dp[i-1][ind-1]+a[i] {
+			val = dp[i-1][ind-1]
+			ind-- //получил купон
+		} else if val == dp[i-1][ind+1] { //был использован купон
+			sl = append(sl, i)
+			ind++
+		}
+	}
+	fmt.Println(len(sl))
+
+	for i := len(sl) - 1; i >= 0; i-- {
+		fmt.Println(sl[i])
+	}
+
 }
