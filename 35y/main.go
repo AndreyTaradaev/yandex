@@ -71,7 +71,7 @@ func (q Stack) Len() int {
 var flag bool = false
 var st Stack
 
-func dfs(graf [][]int, Used []bool, v, parent int) {
+func dfs_list(graf [][]int, Used []bool, v, parent int) {
 	if flag {
 		return
 	}
@@ -80,7 +80,7 @@ func dfs(graf [][]int, Used []bool, v, parent int) {
 	for i := 0; i < len(graf[v]); i++ {
 
 		if !Used[graf[v][i]] {
-			dfs(graf, Used, graf[v][i], v)
+			dfs_list(graf, Used, graf[v][i], v)
 			if flag {
 				return
 			}
@@ -90,6 +90,15 @@ func dfs(graf [][]int, Used []bool, v, parent int) {
 		}
 	}
 	st.Pop()
+}
+
+func dfs (graf [][]int, Used []bool, v, parent int) {
+
+func Printgraf(Graf [][]int){
+for _, v := range Graf {
+	fmt.Println(v)
+}
+
 }
 
 func main() {
@@ -110,7 +119,7 @@ func main() {
 	ns := make([][]int, N+1, N+1)
 
 	for i := 1; i < len(ns); i++ { //строка
-		ns[i] = make([]int, 0, 10)
+		ns[i] = make([]int, N+1, N+1)
 		for j := 1; j < len(ns); j++ {
 			var f int
 			_, err = fmt.Fscan(rd, &f) //   command
@@ -118,17 +127,15 @@ func main() {
 				fmt.Println(err)
 				return
 			}
-			if f != 0 {
-				ns[i] = append(ns[i], j)
-			}
+			ns[i][j] = f			
 		}
 	}
 
-	//fmt.Println(ns)
+	Printgraf(ns)
 
 	
 
-	for i := 1; i < len(ns); i++ {
+	/* for i := 1; i < len(ns); i++ {
 		used := make([]bool, N+1, N+1)
 		//if !used[i] {
 			dfs(ns, used, i, -1)
@@ -136,7 +143,7 @@ func main() {
 		if flag {
 			break
 		}
-	}
+	} */
 	if flag {
 		fmt.Println("YES")
 		fmt.Println(st.Len())
