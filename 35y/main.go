@@ -92,6 +92,9 @@ func dfs(graf [][]int, Used []bool, v, parent int) {
 	st.Pop()
 }
 
+
+
+
 func main() {
 	//var command string
 	var N int // размер матрицы
@@ -126,12 +129,10 @@ func main() {
 
 	//fmt.Println(ns)
 
-	
-
 	for i := 1; i < len(ns); i++ {
 		used := make([]bool, N+1, N+1)
 		//if !used[i] {
-			dfs(ns, used, i, -1)
+		dfs(ns, used, i, -1)
 		//}
 		if flag {
 			break
