@@ -88,7 +88,7 @@ func (q Stack) Len() int {
 var flag bool = false
 var st Stack
 
-func dfs_list(graf [][]int, Used []bool, v, parent int) {
+func dfs(graf [][]int, Used []bool, v, parent int) {
 	if flag {
 		return
 	}
@@ -100,7 +100,7 @@ func dfs_list(graf [][]int, Used []bool, v, parent int) {
 		}
 
 		if !Used[graf[v][i]] {
-			dfs_list(graf, Used, graf[v][i], v)
+			dfs(graf, Used, graf[v][i], v)
 			if flag {
 				return
 			}
@@ -137,7 +137,7 @@ func main() {
 	ns := make([][]int, N+1, N+1)
 
 	for i := 1; i < len(ns); i++ { //строка
-		ns[i] = make([]int, N+1, N+1)
+		ns[i] = make([]int, 0, 10)
 		for j := 1; j < len(ns); j++ {
 			var f int
 			_, err = fmt.Fscan(rd, &f) //   command
@@ -145,7 +145,9 @@ func main() {
 				fmt.Println(err)
 				return
 			}
-			ns[i][j] = f			
+			if f != 0 {
+				ns[i] = append(ns[i], j)
+			}
 		}
 	}
 
@@ -160,7 +162,7 @@ func main() {
 		//	fmt.Println(used)
 			break
 		}
-	} */
+	}
 	if flag {
 		fmt.Println("YES")
 		fmt.Println(st.Len())
