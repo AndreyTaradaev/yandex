@@ -41,6 +41,23 @@ func (q *Stack) Peek() (*int, error) {
 	return &q.values[s-1], nil
 }
 
+// значение пераого в очереди
+func (q *Stack) Peek_Front() (*int, error) {
+	s := len(q.values)
+	if s == 0 {
+		return nil, fmt.Errorf("error")
+	}
+	return &q.values[0], nil
+}
+
+func (q *Stack) front() *int {
+	pval,err := q.Peek_Front()
+	if err!=nil{
+		return nil
+	}
+	return pval
+}
+
 // удаление из очереди
 func (q *Stack) Pop() (*int, error) {
 	s := len(q.values)
@@ -78,13 +95,16 @@ func dfs_list(graf [][]int, Used []bool, v, parent int) {
 	Used[v] = true //При входе в вершину окрашиваем ее в серый цвет
 	st.Push(v)
 	for i := 0; i < len(graf[v]); i++ {
+		if graf[v][i] == parent{	//  граф указвает на тот из которого пришли   
+			continue
+		}
 
 		if !Used[graf[v][i]] {
 			dfs_list(graf, Used, graf[v][i], v)
 			if flag {
 				return
 			}
-		} else if graf[v][i] != parent {
+		} else if 	*(st.front()) == graf[v][i] {
 			flag = true
 			return
 		}
@@ -92,14 +112,12 @@ func dfs_list(graf [][]int, Used []bool, v, parent int) {
 	st.Pop()
 }
 
-func dfs (graf [][]int, Used []bool, v, parent int) {
-
-func Printgraf(Graf [][]int){
-for _, v := range Graf {
-	fmt.Println(v)
+func PrintGraf(Graf [][]int){
+	for ind , v := range Graf {
+		fmt.Println(ind,v)		
+	}
 }
 
-}
 
 func main() {
 	//var command string
@@ -131,16 +149,15 @@ func main() {
 		}
 	}
 
-	Printgraf(ns)
+//	PrintGraf(ns)
 
-	
-
-	/* for i := 1; i < len(ns); i++ {
+	for i := 1; i < len(ns); i++ {
 		used := make([]bool, N+1, N+1)
 		//if !used[i] {
-			dfs(ns, used, i, -1)
+		dfs(ns, used, i, -1)
 		//}
 		if flag {
+		//	fmt.Println(used)
 			break
 		}
 	} */
@@ -152,8 +169,12 @@ func main() {
 			if pval == nil {
 				break
 			}
-			fmt.Print(*pval, " ")
+			fmt.Print( *pval, " ")
+			//fmt.Print( ns[*pval], "\n")
+			
 		}
+
+
 		return
 	}
 
