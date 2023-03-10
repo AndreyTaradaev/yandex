@@ -198,9 +198,9 @@ func main() {
 	}
 	// попытка  сформировать граф по станциям не увенчалась успехом
 	// будем по другому, по линиям
-	for i, v := range ns {
+	/* for i, v := range ns {
 		fmt.Println(i, v)
-	}
+	} */
 
 	// мап для поиска линии по станции
 
@@ -211,10 +211,10 @@ func main() {
 			m[ns[i][j]] = append(m[ns[i][j]], i)
 		}
 	}
-	fmt.Println("\n")
+	/* fmt.Println("\n")
 	for key, v := range m {
 		fmt.Println(key, v)
-	}
+	} */
 
 	// спиок смежности линий
 
@@ -234,18 +234,23 @@ func main() {
 	}
 
 	for _, v := range m {
-		for i := 1; i < len(v); i++ {
-			if !isExist(line[v[i]], v[i-1]) {
-				line[v[i]] = append(line[v[i]], v[i-1])
-				line[v[i-1]] = append(line[v[i-1]], v[i])
+		for i := 0; i < len(v); i++ {
+			for j := i + 1; j < len(v); j++ {
+				if !isExist(line[v[i]], v[j]) {
+					line[v[i]] = append(line[v[i]], v[j])
+				}
+				if !isExist(line[v[j]], v[i]) {
+					line[v[j]] = append(line[v[j]], v[i])
+				}
+
 			}
 		}
 	}
 
-	fmt.Println("\n")
+	/* fmt.Println("\n")
 	for i, v := range line {
 		fmt.Println(i, v)
-	}
+	} */
 
 	getLine := func(station int) []int { // к какой линии принадлежит  станция
 		return m[station]
@@ -253,91 +258,23 @@ func main() {
 
 	firstLine := getLine(first)
 	endline := getLine(end)
-	min :=int(10e9)
+	min := int(10e9)
 
 	for i := 0; i < len(firstLine); i++ {
 		for j := 0; j < len(endline); j++ {
-		path := BFS(line,firstLine[i],endline[j])	
-			if( path == nil){
+			path := BFS(line, firstLine[i], endline[j])
+			if path == nil {
 				fmt.Println("-1")
 				return
 			}
-			if len(path)<min{
+			if len(path) < min {
 				min = len(path)
 
 			}
-			
+
 		}
-		
+
 	}
-	fmt.Println(min)
-	//path :=  BFS(line, startnode, endnode int) []int {
+	fmt.Println(min - 1)
 
 }
-
-/*
-   	mas := make([][]int, N+1, N+1)
-   	for i := 0; i < len(mas); i++ {
-   		mas[i] = make([]int, 0, N+1)
-   	}
-
-
-
-
-   	for i := 0; i < len(ns); i++ {
-   		for j := 0; j < len(ns[i])-1; j++ {
-   				mas[ns[i][j]] = append(mas[ns[i][j]], ns[i][j+1])
-   				mas[ns[i][j+1]] = append(mas[ns[i][j+1]], ns[i][j])
-   		}
-   	}
-
-
-   	  way :=  BFS(mas,first, end)
-   	  if(way==nil){
-   		fmt.Println("-1")
-   		return
-   	  }
-   	  fmt.Println(way)
-   	isline := func(station , l int ) bool { //проверяет есть ли у этой линии станция
-
-   			for j := 0; j < len(ns[l]); j++ {
-   				if(ns[l][j] == station ) {
-   					return true
-   				}
-   			}
-   		return false
-   	}
-   getLine:= func (first,end int) int{
-   	for i := 0; i < len(ns); i++ {
-   		var l1, l2 int = -1, -2
-   		for j := 0; j < len(ns[i]); j++ {
-   			if ns[i][j] == first  {
-   				l1 = i
-   			}
-   			if ns[i][j] == end {
-   				l2 = i
-   			}
-   			if	l1 == l2 {
-   				return i+1
-   			}
-   		}
-   	}
-   return -1
-   }
-
-   //fmt.Println(ns)
-   jump := 0
-   l :=0
-
-   	for i:=1 ;i<len( way);i++ {
-   		if i==1 {
-   			l = getLine(way[i-1],way[i] )
-   			continue
-   		}
-   		l3 :=  getLine(way[i-1],way[i] )
-   		if ( l != l3){
-   			jump++
-   			l= l3
-   		}
-   	}
-   fmt.Println(jump) */
