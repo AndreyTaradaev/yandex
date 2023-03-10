@@ -101,17 +101,17 @@ func PrintGraf2(Graf [][]int) {
 	}
 }
 
-func BFS(graf [][]int, startnode, endnode int) int {
+func BFS(graf [][]int, startnode, endnode int) []int {
 	if startnode < 0 || startnode >= len(graf) {
-		return 0
+		return nil
 	}
 
 	if endnode < 0 || endnode >= len(graf) {
-		return 0
+		return nil
 	}
 	// очередь
-	//var q Queue[station] //   очередь вершин
-	/* q.Enqueue(startnode)
+	var q Queue[int] //   очередь вершин
+	q.Enqueue(startnode)
 	size := len(graf)
 	used := make([]bool, size, size) // признак  посещености вершины
 	d := make([]int, size, size)     // расстояние
@@ -122,37 +122,30 @@ func BFS(graf [][]int, startnode, endnode int) int {
 	for q.Len() != 0 {
 		v, _ := q.Peek() //Извлекаем из головы очереди вершину
 		q.Dequeue()
-		size = len(graf[v]) //получаем количество связей у вершины
+		size = len(graf[*v]) //получаем количество связей у вершины
 		for i := 0; i < size; i++ {
-			to := graf[v][i]
+			to := graf[*v][i]
 			if !used[to] { //Если вершина не посещена
-				used[to] = true  //посещаем ее
-				q.Enqueue(to)    //и добавляем к концу очереди
-				d[to] = d[v] + 1 //Считаем расстояние до вершины
-				p[to] = v        //Запоминаем предка
+				used[to] = true //посещаем ее
+				q.Enqueue(to)   //и добавляем к концу очереди
+				//if (to.line!=)
+				d[to] = d[*v] + 1 //Считаем расстояние до вершины
+				p[to] = *v        //Запоминаем предка
 			}
 		}
 	}
 
 	if !used[endnode] {
-		fmt.Println("-1")
-		return -1
+		
+		return nil
 	} else {
 		path := []int{}
 		for v := endnode; v != -1; v = p[v] {
+			//for v := startnode; v != endnode; v = p[v] {	
 			path = append(path, v)
-		}
-		fmt.Println(len(path) - 1)
-		if len(path)-1 == 0 {
-			return len(path) - 1
-		}
-		for i := len(path) - 1; i >= 0; i-- {
-			fmt.Print(path[i], " ")
-		}
-		fmt.Print("\n")
-
-		return len(path) - 1
-	} */return 0
+		}				
+		return path
+	} 
 }
 
 func main() {
@@ -203,77 +196,73 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(ns)
+	//fmt.Println(ns)
 
-	mas := make([][]station, N+1, N+1)
+
+	mas := make([][]int, N+1, N+1)
 	for i := 0; i < len(mas); i++ {
-		mas[i] = make([]station, 0, N+1)
+		mas[i] = make([]int, 0, N+1)
 	}
+
+	
+
 
 	for i := 0; i < len(ns); i++ {
-		for j := 0; j < len(ns[i])-1; j++ {
-			for z := j + 1; z < len(ns[i]); z++ {
-				mas[ns[i][j]] = append(mas[ns[i][j]], station{ns[i][z], i + 1})
-				mas[ns[i][z]] = append(mas[ns[i][z]], station{ns[i][j], i + 1})
-			}
+		for j := 0; j < len(ns[i])-1; j++ {			
+				mas[ns[i][j]] = append(mas[ns[i][j]], ns[i][j+1])
+				mas[ns[i][j+1]] = append(mas[ns[i][j+1]], ns[i][j])				
 		}
 	}
-	fmt.Println(mas)
-	/* 	 fmt.Println(N, M, S, T, Q)
-	//	fmt.Println(rn, rm, rs, rt)
-	//	PrintGraf2(ns)
-	step := 1
-	waschanges := true
-	for waschanges {
-		waschanges = false
-		for i := 2; i < len(ns)-2; i++ {
-			for j := 2; j < len(ns[i])-2; j++ {
-				if ns[i][j] == step {
-					for z := 0; z < 8; z++ {
-						x, y := getXY(z)
-						if ns[i+x][j+y] == 0 {
-							ns[i+x][j+y] = step + 1
-							waschanges = true
-						}
-					}
+	
 
-					/* fmt.Println("\n")
-					fmt.Println(i, j, step)
-					PrintGraf2(ns)
-				}
-
-			}
-		}
-		step++
-	}
-	ns[rs][rt] = 0
-	/* fmt.Println("\n")
-	fmt.Println(rn, rm, rs, rt)
-	PrintGraf(ns)
-	answer := 0
-	nosolution := false
-	//	fmt.Println(Q,"\n")
-	for i := 0; i < Q; i++ {
-		var xb, yb int
-		_, err = fmt.Fscan(rd, &xb, &yb) //   command
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		if ns[xb+1][yb+1] == 0 {
-			if xb+1 != rs || yb+1 != rt {
-				nosolution = true
-				break
-			}
-		}
-		//fmt.Print(    ns[xb+1][yb+1],"\n")
-		answer += ns[xb+1][yb+1]
-
-	}
-	if nosolution {
+	  way :=  BFS(mas,first, end)
+	  if(way==nil){
 		fmt.Println("-1")
 		return
+	  }	  
+	  fmt.Println(way)
+/* 	isline := func(station , l int ) bool { //проверяет есть ли у этой линии станция
+		
+			for j := 0; j < len(ns[l]); j++ {
+				if(ns[l][j] == station ) {
+					return true
+				}
+			}
+		return false
+	} */
+getLine:= func (first,end int) int{
+	for i := 0; i < len(ns); i++ {
+		var l1, l2 int = -1, -2
+		for j := 0; j < len(ns[i]); j++ {
+			if ns[i][j] == first  {
+				l1 = i
+			}
+			if ns[i][j] == end {
+				l2 = i
+			}
+			if	l1 == l2 {
+				return i+1 
+			}		
+		}
 	}
-	fmt.Println(answer) */
+return -1
+}
+
+//fmt.Println(ns)
+jump := 0
+l :=0
+
+	for i:=1 ;i<len( way);i++ {		
+		if i==1 {
+			l = getLine(way[i-1],way[i] )		
+			continue
+		}
+		l3 :=  getLine(way[i-1],way[i] )		
+		if ( l != l3){
+			jump++
+			l= l3
+		}		
+	}
+fmt.Println(jump)
 
 }
